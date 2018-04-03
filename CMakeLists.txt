@@ -125,7 +125,7 @@ catkin_package(
     moveit_core
     moveit_ros_planning_interface
     interactive_markers
-  DEPENDS
+    DEPENDS
     EIGEN3
     geometry_msgs
 )
@@ -137,7 +137,7 @@ catkin_package(
 ## Your package locations should be listed before other locations
 
 include_directories(SYSTEM ${Boost_INCLUDE_DIR} ${EIGEN3_INCLUDE_DIRS})
-include_directories(${catkin_INCLUDE_DIRS})
+include_directories(include ${catkin_INCLUDE_DIRS})
 link_directories(${catkin_LIBRARY_DIRS})
 
 ## Declare a C++ library

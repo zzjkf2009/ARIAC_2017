@@ -3,12 +3,12 @@ The objective of this project is to make a Task-level planning to test the agili
 ![ARIAC](https://github.com/move_arm/ARIAC.png)
 
 ## Package
-This is a costumed package developed by our group which contains the level-planning and control using MoveIt! to control the industrial robot (UR10 form Universal robot) and a simple task-level control to solving the (qual2a)[https://bitbucket.org/osrf/ariac/wiki/2017/qualifiers/qual2_scenarios]. In this qualifier, our planner need to deal with problem of dropping part: One of the piston rod parts is picked up from the bin, it will be dropped back into the bin. We have to retrieve this part in order to complete the order. In addition, when one of the gear parts is placed over a tray, it will be dropped into the tray in an incorrect position. we need to re-position this part to complete the kit with the parts in the correct poses.
+This is a costumed package developed by our group which contains the level-planning and control using MoveIt! to control the industrial robot (UR10 form Universal robot) and a simple task-level control to solving the [qual2a](https://bitbucket.org/osrf/ariac/wiki/2017/qualifiers/qual2_scenarios). In this qualifier, our planner need to deal with problem of dropping part: One of the piston rod parts is picked up from the bin, it will be dropped back into the bin. We have to retrieve this part in order to complete the order. In addition, when one of the gear parts is placed over a tray, it will be dropped into the tray in an incorrect position. we need to re-position this part to complete the kit with the parts in the correct poses.
 
 ## Pre-request
 - Gazebo
 - ROS (kinetic)
-- ARIAC(2017) (installation:ariac wiki)[http://wiki.ros.org/ariac/Tutorials/SystemSetup]
+- ARIAC(2017) [installation:ariac wiki](http://wiki.ros.org/ariac/Tutorials/SystemSetup)
 - MoveIt!
 
 ## Build
@@ -54,4 +54,4 @@ rosservice call /move_arm/toPose "pose:
 mode: 1"
 ```
 ## Result
-Our package successfully pass the qualifier 2 and finish all the desired tasks during a reasonable time. There is the link of the result (Video)[https://www.youtube.com/watch?v=EdZv5IVYHCU&feature=youtu.be]
+Our package successfully pass the qualifier 2 and finish all the desired tasks during a reasonable time. There is the link of the result [Vide](https://www.youtube.com/watch?v=EdZv5IVYHCU&feature=youtu.be)
