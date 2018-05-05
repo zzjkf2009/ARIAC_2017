@@ -1,4 +1,6 @@
 geometry_msgs/Pose pose
+time future_time
 int64 mode
+string part_type
 ---
 int64 sum

@@ -36,7 +36,7 @@
 #include <string>
 #include <geometry_msgs/Point.h>
 #include <tf/transform_broadcaster.h>
-
+#include <queue>
 /**
  * [start_competition Start the competition by waiting for and then calling the start ROS Service.]
  * @param node [roshandle node]
@@ -61,13 +61,36 @@ void start_competition(ros::NodeHandle & node) {
                 ROS_INFO("Competition started!");
         }
 }
-
+template <class T>
+struct Greater {
+        bool operator()(const T& p1,const T& p2){
+                return (p1.priority > p2.priority);
+        }
+};
+class Order {
+public:
+Order(geometry_msgs::Pose p, int i) : pose(p),priority(i){
+}
+geometry_msgs::Pose pose;
+int priority;
+/*
+   bool operator == (const order &s2) const {
+        return (priority == s2.priority);
+   }
+   bool operator > (const order &s2) const {
+        return (priority > s2.priority);
+   }
+   bool operator < (const order &s2) const {
+        return (priority < s2.priority);
+   }*/
+};
 /**
  * [MyCompetitionClass  Class that can hold state and provide methods that handle incoming data.]
  */
 class MyCompetitionClass
 {
 public:
+std::priority_queue <Order,std::vector<Order>,Greater<Order> > order_priority_queue;
 explicit MyCompetitionClass(ros::NodeHandle & node)
         : current_score_(0), has_been_zeroed_(false)
 {
@@ -143,13 +166,16 @@ void order_callback(const osrf_gear::Order::ConstPtr & order_msg) {
         // ROS_INFO_STREAM("Received order:\n" << *order_msg);
         ROS_INFO_STREAM("order id is "<< order_msg->order_id);
         bool record_orders = false;
-        //int num = 0;
+        int priority_num = 0;
 
         received_orders_.push_back(*order_msg);
         for(osrf_gear::Order order_ : received_orders_) {
+                priority_num++;
                 for(osrf_gear::Kit kit_ : order_.kits) {
                         for(osrf_gear::KitObject object_ : kit_.objects) {
                                 order_pose_list.push_back(object_.pose);
+                                Order order(object_.pose,priority_num);
+                                order_priority_queue.push(order);
                         }
                 }
         }

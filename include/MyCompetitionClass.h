@@ -10,7 +10,7 @@
  * terms of the BSD license.
  */
 
-#ifndef   MYCOMPETITIONCLASS_H
+#ifndef  MYCOMPETITIONCLASS_H
 #define  MYCOMPETITIONCLASS_H
 
 
@@ -35,6 +35,23 @@
 #include <string>
 #include <geometry_msgs/Point.h>
 #include <tf/transform_broadcaster.h>
+#include <map>
+#include "tf2_msgs/TFMessage.h"
+
+// Each object is an oder
+struct order {
+        geometry_msgs::Pose pose;
+        std::string type;
+};
+
+// Each kit has several orders
+struct Kit {
+        std::vector<order> order_in_kit_list;
+        int priority;
+        int tray_num = 0;
+};
+
+
 
 class MyCompetitionClass
 {
@@ -64,7 +81,7 @@ void order_callback(const osrf_gear::Order::ConstPtr & order_msg);
  * @param msg [geometry_msgs::Pose]
  * @param x   [part numnber]
  */
-void orderPoseBroadcaster(geometry_msgs::Pose& msg, const int& x);
+void orderPoseBroadcaster(geometry_msgs::Pose& msg, const int& x, const int& tray_num);
 /**
  * [desired_part_pose Publish pose info by listen the transform between the
  * target frame to the source frame (/world)]
@@ -72,7 +89,7 @@ void orderPoseBroadcaster(geometry_msgs::Pose& msg, const int& x);
  * @param  x        [index number]
  * @return          [geometry_msgs::Pose]
  */
-geometry_msgs::Pose desired_part_pose(const tf::TransformListener &listener,const int &x);
+geometry_msgs::Pose desired_part_pose(const tf::TransformListener &listener,const int &x,const int& tray_num);
 /**
  * [joint_state_callback reveive the joint state]
  * @param joint_state_msg [sensor_msgs::JointState]
@@ -100,12 +117,34 @@ void proximity_sensor_callback(const sensor_msgs::Range::ConstPtr & msg);
  * @param msg [sensor_msgs::LaserScan]
  */
 void laser_profiler_callback(const sensor_msgs::LaserScan::ConstPtr & msg);
-std::vector<geometry_msgs::Pose> order_pose_list;
+/**
+ * [agv_state_callback check the state of the agv: ready to delievery or delieverying]
+ * @param msg [string]
+ */
+void agv1_state_callback(const std_msgs::String::ConstPtr &msg);
+/**
+ * [agv_state_callback check the state of the agv: ready to delievery or delieverying]
+ * @param msg [string]
+ */
+void agv2_state_callback(const std_msgs::String::ConstPtr &msg);
+/**
+ * [faulty_camera_1_callback check if there is faulty part on the tray 1]
+ * @param msg [osrf_gear::LogicalCameraImage]
+ */
+void agv_faulty_part_detect(const tf2_msgs::TFMessage::ConstPtr& msg);
+
+std::vector<order> order_pose_list;
+std::map <int, Kit > kit_priority_queue;
+bool agv1_ready_position = false;
+bool agv2_ready_position = false;
+bool faulty_on_agv = false;
+geometry_msgs::Pose faulty_pose;
 private:
 std::string competition_state_;
 double current_score_;
 ros::Publisher joint_trajectory_publisher_;
 std::vector<osrf_gear::Order> received_orders_;
 sensor_msgs::JointState current_joint_states_;
+int priority_num = 1;
 };
 #endif

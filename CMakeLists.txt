@@ -73,6 +73,7 @@ find_package(Boost REQUIRED system filesystem date_time thread)
 
 ## Generate services in the 'srv' folder
 add_service_files(
+  DIRECTORY srv
   FILES
   Pick.srv
 )
@@ -125,7 +126,7 @@ catkin_package(
     moveit_core
     moveit_ros_planning_interface
     interactive_markers
-    DEPENDS
+  DEPENDS
     EIGEN3
     geometry_msgs
 )
@@ -172,11 +173,13 @@ link_directories(${catkin_LIBRARY_DIRS})
 
 add_executable(move_arm move_arm.cpp)
 add_executable(move_srv move_srv.cpp)
-add_executable(move_test qual2a.cpp)
+add_executable(move_orderManager orderManager.cpp MyCompetitionClass.cpp)
 add_dependencies( move_srv ${PROJECT_NAME}_generate_messages_cpp )
 target_link_libraries(move_arm ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 target_link_libraries(move_srv ${catkin_LIBRARIES} ${Boost_LIBRARIES})
-target_link_libraries(move_test ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(move_orderManager ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+
+#target_link_libraries(move_test ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 install(TARGETS move_arm DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 #############
@@ -226,3 +229,4 @@ install(TARGETS move_arm DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+

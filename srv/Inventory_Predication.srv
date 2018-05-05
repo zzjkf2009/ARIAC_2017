@@ -1,0 +1,6 @@
+string part_type
+time future_time
+---
+bool success
+tf2_msgs/TFMessage parts_info
+string message

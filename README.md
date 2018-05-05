@@ -21,7 +21,7 @@ catkin_make
 ## Start the competition and qualifier
 ### Start ARIAC Environment
 ```
-rosrun osrf_gear gear.py -f `catkin_find --share osrf_gear`/config/qual2a.yaml ~/ENPM809_ws/src/move_arm/config/qual2_config.yaml
+rosrun osrf_gear gear.py -f `catkin_find --share osrf_gear`/config/qual3a.yaml ~/ENPM809_ws/src/move_arm/config/qual3_config.yaml
 ```
 
 ### Start MoveIt
@@ -33,9 +33,13 @@ roslaunch ur10_moveit_config ur10_moveit_planning_execution.launch sim:=true
 ```
 rosrun move_arm move_srv
 ```
-### Start the move_arm excuation Node
+### Start part_detect
 ```
-rosrun move_arm move_test
+rosrun part_perception detect_part
+```
+### Start the move_arm execution Node
+```
+rosrun move_arm move_orderManager
 ```
 ### command line to move the arm by pose
 To move the arm to pick up part, call service like the following,
@@ -43,9 +47,9 @@ to place(release) the part, turn it to mode 2
 ```
 rosservice call /move_arm/toPose "pose:
   position:
-    x: -0.2
-    y: 0.33
-    z: 0.745
+    x: -0.4
+    y: -0.635
+    z: 0.74
   orientation:
     x: 0.0
     y: 0.0
