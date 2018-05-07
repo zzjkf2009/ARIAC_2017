@@ -12,6 +12,28 @@ void pick_place_action(const int& active_kit,std::map<int,Kit > &kit_world_prior
 void Pick_place_faulty(move_arm::Pick &Movesrv,ros::ServiceClient &client,MyCompetitionClass &comp_class);
 void part_locations(ros::ServiceClient &client_part_on_bin,std::map <std::string, std::vector<std::vector<float> > > &bin_manager,std::vector<std::vector<float> > &bin_locations);
 
+void start_competition(ros::NodeHandle & node) {
+        // Create a Service client for the correct service, i.e. '/ariac/start_competition'.
+        ros::ServiceClient start_client =
+                node.serviceClient<std_srvs::Trigger>("/ariac/start_competition");
+        // If it's not already ready, wait for it to be ready.
+        // Calling the Service using the client before the server is ready would fail.
+        if (!start_client.exists()) {
+                ROS_INFO("Waiting for the competition to be ready...");
+                start_client.waitForExistence();
+                ROS_INFO("Competition is now ready.");
+        }
+        ROS_INFO("Requesting competition start...");
+        std_srvs::Trigger srv;         // Combination of the "request" and the "response".
+        start_client.call(srv);         // Call the start Service.
+        if (!srv.response.success) {         // If not successful, print out why.
+                ROS_ERROR_STREAM("Failed to start the competition: " << srv.response.message);
+        } else {
+                ROS_INFO("Competition started!");
+        }
+}
+
+
 int main(int argc, char ** argv) {
         // Last argument is the default name of the node.
         ros::init(argc, argv, "ariac_example_node");
@@ -19,6 +41,7 @@ int main(int argc, char ** argv) {
         tf::TransformListener listener;
         // Instance of custom class from above.
         MyCompetitionClass comp_class(node);
+        start_competition(node);
         ros::Rate rate(10.0);
         // Subscribe to the '/ariac/orders' topic.
         ros::Subscriber orders_subscriber = node.subscribe(
@@ -34,6 +57,8 @@ int main(int argc, char ** argv) {
 
         bool initialize = false;
         int active_kit = 0;
+        double lower_time_bound = 50;
+        double now_time = 0;
         int order_tf_index = 0;
         std::map <int, Kit > kit_world_priority_queue;
         std::vector<int> tray_occupied(2,0);
@@ -86,9 +111,14 @@ int main(int argc, char ** argv) {
                                         pick_place_action( tray_occupied[1],kit_world_priority_queue,bin_manager,Movesrv,client,comp_class,tray_occupied,Go_delivery,client_agv1,client_agv2);
                         }
                 }
-                /*    else{
-                            client_end_competition.call(end_competition);
-                    }*/
+                else{
+                        now_time = ros::Time::now().toSec();
+                        if(now_time > lower_time_bound) {
+                                ROS_INFO_STREAM("the current time is "<< now_time);
+                                client_end_competition.call(end_competition);
+                        }
+
+                }
                 ros::spinOnce();
                 rate.sleep();
         }
@@ -239,7 +269,7 @@ void part_locations(ros::ServiceClient &client_part_on_bin,std::map <std::string
         std::string belt = "belt";
         // Find the gear part
         part_position.request.material_type = "gear_part";
-        std::vector<float> gear_offset = {0.0667,-0.0667,0.2,-0.2};
+        std::vector<float> gear_offset = {0.1,-0.1,0.0,0.2,-0.2};
         if(client_part_on_bin.call(part_position)) {
                 std::vector<std::vector<float> > bin_gear;
                 for(int i = 0; i < part_position.response.storage_units.size(); i++) {
