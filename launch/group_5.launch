@@ -1,0 +1,32 @@
+<launch>
+
+ 
+<include file="$(find ur10_moveit_config)/launch/ur10_moveit_planning_execution.launch">
+  <arg name="sim" value="true"/>
+</include>
+
+<node 
+ name="detect_part"
+ pkg="part_perception"
+ type="detect_part"
+ launch-prefix="xterm -e"
+ output="screen"
+/>
+
+<node 
+ name="move_srv"
+ pkg="move_arm"
+ type="move_srv"
+ launch-prefix="xterm -e"
+ output="screen"
+/>
+
+<node 
+ name="move_orderManager"
+ pkg="move_arm"
+ type="move_orderManager"
+ launch-prefix="xterm -e"
+ output="screen"
+/>
+
+</launch>
