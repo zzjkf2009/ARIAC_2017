@@ -74,7 +74,6 @@ mode: 1"
 ```
 ## Result
 Our package successfully pass all the qualifiers and finish all the desired tasks during a reasonable time, which is the best team among the six teams. There are the links of the result
-[Vide](https://www.youtube.com/watch?v=EdZv5IVYHCU&feature=youtu.be)
 [![Qual2a](https://img.youtube.com/vi/EdZv5IVYHCU/0.jpg)](https://www.youtube.com/watch?v=EdZv5IVYHCU)
 [![Qual2b](https://img.youtube.com/vi/EmTPnTIXFfU/0.jpg)](https://www.youtube.com/watch?v=EmTPnTIXFfU)
 [![Qual3a](https://img.youtube.com/vi/UthBsMiXU0U/0.jpg)](https://www.youtube.com/watch?v=UthBsMiXU0U)
